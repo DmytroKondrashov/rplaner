@@ -14,7 +14,6 @@ export class AppController {
 
   @MessagePattern({cmd: 'getUsers'})
   getUsers(): string {
-    console.log('==========================================')
     return 'Users microservice - getUsers';
   }
 }
