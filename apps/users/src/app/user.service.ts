@@ -5,7 +5,7 @@ import * as mongo from 'mongodb'
 import { InjectDb } from 'nest-mongodb';
 
 @Injectable()
-export class AppService {
+export class UserService {
   private readonly collection: mongo.Collection;
 
   constructor(

@@ -1,7 +1,7 @@
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 // import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app/app.module';
+import { UserModule } from './app/user.module';
 
 async function bootstrap() {
   // const app = await NestFactory.create(AppModule);
@@ -12,7 +12,7 @@ async function bootstrap() {
   // Logger.log(
   //   `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`
   // );
-  const app = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
+  const app = await NestFactory.createMicroservice<MicroserviceOptions>(UserModule, {
     transport: Transport.RMQ,
     options: {
       urls: ['amqp://localhost:5672'],

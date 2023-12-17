@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { UserController } from './user.controller';
+import { UserService } from './user.service';
 import { MongoModule } from 'nest-mongodb';
 import { ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [MongoModule.forRoot('mongodb://localhost', 'rplaner')],
-  controllers: [AppController],
-  providers: [AppService, ConfigService],
+  controllers: [UserController],
+  providers: [UserService, ConfigService],
 })
-export class AppModule {}
+export class UserModule {}
