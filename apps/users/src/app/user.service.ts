@@ -24,6 +24,7 @@ export class UserService {
 
     this.client = new MongoClient(connectionUrl);
     this.database = this.client.db(dbName);
+    await this.client.connect();
   }
 
   async onModuleDestroy() {
@@ -39,7 +40,11 @@ export class UserService {
   }
 
   async getUsers() {
-    return this.collection.find()
+    console.log('=============================================')
+    const result = await this.collection.find({}).toArray();
+    console.log(this.db.collection)
+    console.log(this.configService.get('MONGODB_DATABASE_NAME'))
+    return result;  
     // return 'true';
   }
 }
