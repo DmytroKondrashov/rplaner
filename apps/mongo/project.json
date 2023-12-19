@@ -1,0 +1,57 @@
+{
+  "name": "mongo",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/mongo/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "target": "node",
+        "compiler": "tsc",
+        "outputPath": "dist/apps/mongo",
+        "main": "apps/mongo/src/main.ts",
+        "tsConfig": "apps/mongo/tsconfig.app.json",
+        "assets": ["apps/mongo/src/assets"],
+        "isolatedConfig": true,
+        "webpackConfig": "apps/mongo/webpack.config.js"
+      },
+      "configurations": {
+        "development": {},
+        "production": {}
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "mongo:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "mongo:build:development"
+        },
+        "production": {
+          "buildTarget": "mongo:build:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/mongo/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/mongo/jest.config.ts"
+      }
+    }
+  },
+  "tags": []
+}
