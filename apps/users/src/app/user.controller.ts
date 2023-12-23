@@ -8,11 +8,6 @@ import { UserService } from './user.service';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  // @Get()
-  // getData() {
-  //   return this.appService.getData();
-  // }
-
   @MessagePattern({cmd: 'getUsers'})
   getUsers(): Promise<unknown> {
     // return 'Users microservice - getUsers';
