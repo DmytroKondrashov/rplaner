@@ -1,13 +1,13 @@
 import { Controller, Get, Inject } from '@nestjs/common';
 
-import { AppService } from './app.service';
+import { ClientService } from './client.service';
 import { ClientProxy } from '@nestjs/microservices';
 
 @Controller()
-export class AppController {
+export class ClientController {
   constructor(
     @Inject('USERS_SERVICE') private client: ClientProxy,
-    private readonly appService: AppService
+    private readonly clientService: ClientService
   ) {}
 
   // It doesn't seem to be necessary
@@ -18,7 +18,7 @@ export class AppController {
 
   @Get()
   getData() {
-    return this.appService.getData();
+    return this.clientService.getData();
   }
 
   @Get('/users')
