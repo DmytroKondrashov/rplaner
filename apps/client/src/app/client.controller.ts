@@ -10,12 +10,6 @@ export class ClientController {
     private readonly clientService: ClientService
   ) {}
 
-  // It doesn't seem to be necessary
-  // @Client({ transport: Transport.RMQ })
-  // async onApplicationBootstrap() {
-  //   await this.client.connect();
-  // }
-
   @Get()
   getData() {
     return this.clientService.getData();
