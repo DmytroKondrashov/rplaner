@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 
-import { MongoController } from './app.controller';
-import { MongoService } from './app.service';
+import { MongoController } from './mongo.controller';
+import { MongoService } from './mongo.service';
 
 @Module({
   imports: [],

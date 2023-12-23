@@ -1,6 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 
-import { MongoService } from './app.service';
+import { MongoService } from './mongo.service';
 
 @Controller()
 export class MongoController {
