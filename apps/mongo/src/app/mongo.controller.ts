@@ -7,8 +7,8 @@ import { MessagePattern } from '@nestjs/microservices';
 export class MongoController {
   constructor(private readonly mongoService: MongoService) {}
 
-  @MessagePattern({cmd: 'getUsers'})
-  getUsers(): unknown {
+  @MessagePattern({cmd: 'findAll'})
+  findAll(): unknown {
     return this.mongoService.findAll('users');
   }
 }
