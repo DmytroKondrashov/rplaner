@@ -1,16 +1,18 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Controller, Get } from '@nestjs/common';
-import { MessagePattern } from '@nestjs/microservices';
+import { Controller, Get, Inject } from '@nestjs/common';
+import { ClientProxy, MessagePattern } from '@nestjs/microservices';
 import { UserService } from './user.service';
 // import { FindCursor, WithId } from 'mongodb';
 
 @Controller()
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    @Inject('MONGO_SERVICE') private client: ClientProxy,
+  ) {}
 
   @MessagePattern({cmd: 'getUsers'})
   getUsers(): Promise<unknown> {
-    // return 'Users microservice - getUsers';
     return this.userService.getUsers();
   }
 }

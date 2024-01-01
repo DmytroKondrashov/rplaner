@@ -22,6 +22,5 @@ export class ClientController {
     } catch (error) {
       console.error('Error in /users request:', error.message);
     }
-
   }
 }

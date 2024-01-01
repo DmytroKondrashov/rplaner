@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
-import { MongoModule } from 'nest-mongodb';
 import { ConfigService } from '@nestjs/config';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 
@@ -11,11 +10,11 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
   imports: [
     ClientsModule.register([
       {
-        name: 'USERS_SERVICE',
+        name: 'MONGO_SERVICE',
         transport: Transport.RMQ,
         options: {
           urls: ['amqp://localhost:5672'],
-          queue: 'users_queue',
+          queue: 'mongo_queue',
         },
       },
     ]),
