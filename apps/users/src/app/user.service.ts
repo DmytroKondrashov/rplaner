@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 // import { ClientProxy } from '@nestjs/microservices';
 // import { Db, MongoClient } from 'mongodb';
@@ -6,7 +6,9 @@ import {
   Collection,
   Db,
   MongoClient,
+  WithId,
 } from 'mongodb';
+import { SignInDto } from './dtos/sign.in.dto';
 
 @Injectable()
 export class UserService {
@@ -34,6 +36,10 @@ export class UserService {
     return this.database.collection(collectionName);
   }
 
+  findOne(collection: string, query): Promise<WithId<Document>> {
+    return this.collection(collection).findOne(query);
+  }
+
   findAll(collection: string): unknown {
     return this.collection(collection).find().toArray();
   }
@@ -46,5 +52,19 @@ export class UserService {
     //   console.error('Error in /users request:', error.message);
     // }
     return this.findAll('users');
+  }
+
+  async login(data: SignInDto) {
+    const { userName, password } = data;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const user: any = await this.findOne('users', { userName });
+    if (!user) {
+      throw new NotFoundException();
+    }
+    if (user?.password !== password) {
+      throw new UnauthorizedException();
+    }
+
+    return user;
   }
 }

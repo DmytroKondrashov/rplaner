@@ -2,7 +2,7 @@
 import { Controller, Get, Inject } from '@nestjs/common';
 import { ClientProxy, MessagePattern } from '@nestjs/microservices';
 import { UserService } from './user.service';
-// import { FindCursor, WithId } from 'mongodb';
+import { SignInDto } from './dtos/sign.in.dto';
 
 @Controller()
 export class UserController {
@@ -14,5 +14,10 @@ export class UserController {
   @MessagePattern({cmd: 'getUsers'})
   getUsers(): Promise<unknown> {
     return this.userService.getUsers();
+  }
+
+  @MessagePattern({cmd: 'login'})
+  login(data: SignInDto): Promise<unknown> {
+    return this.userService.login(data);
   }
 }
