@@ -4,6 +4,7 @@ import { ClientService } from './client.service';
 import { ClientProxy } from '@nestjs/microservices';
 import { SignInDto } from './dtos/sign.in.dto';
 import { Public } from './decorators/public.decorator'
+import { SignUpDto } from './dtos/sign.up.dto';
 
 @Controller()
 export class ClientController {
@@ -32,6 +33,16 @@ export class ClientController {
   async login(@Body() signInDto: SignInDto): Promise<string> {
     try {
       return this.client.send<string>({cmd: 'login'}, signInDto).toPromise();
+    } catch (error) {
+      console.error('Error in /users request:', error.message);
+    }
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('login')
+  async signUp(@Body() signUpDto: SignUpDto): Promise<string> {
+    try {
+      return this.client.send<string>({cmd: 'signUp'}, signUpDto).toPromise();
     } catch (error) {
       console.error('Error in /users request:', error.message);
     }
