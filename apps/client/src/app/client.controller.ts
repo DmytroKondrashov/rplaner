@@ -1,9 +1,9 @@
-import { Post, HttpCode, Controller, Get, HttpStatus, Inject, Body, UseGuards, Req } from '@nestjs/common';
+import { Post, HttpCode, Controller, Get, HttpStatus, Inject, Body, Req } from '@nestjs/common';
 
 import { ClientService } from './client.service';
 import { ClientProxy } from '@nestjs/microservices';
 import { SignInDto } from './dtos/sign.in.dto';
-import { AuthGuard } from './guards/auth.guard';
+import { Public } from './decorators/public.decorator'
 
 @Controller()
 export class ClientController {
@@ -17,6 +17,7 @@ export class ClientController {
     return this.clientService.getData();
   }
 
+  @Public()
   @Get('users')
   async getUsers(): Promise<string> {
     try {
@@ -36,7 +37,6 @@ export class ClientController {
     }
   }
 
-  @UseGuards(AuthGuard)
   @Get('profile')
   getProfile(@Req() req) {
     return true;
