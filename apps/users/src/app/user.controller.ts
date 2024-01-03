@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Controller, Get, Inject } from '@nestjs/common';
+import { Controller, Inject } from '@nestjs/common';
 import { ClientProxy, MessagePattern } from '@nestjs/microservices';
 import { UserService } from './user.service';
 import { SignInDto } from './dtos/sign.in.dto';
