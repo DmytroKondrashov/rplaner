@@ -3,7 +3,9 @@ import { ConfigService } from '@nestjs/config';
 import {
   Collection,
   Db,
+  InsertOneResult,
   MongoClient,
+  OptionalId,
   WithId,
 } from 'mongodb';
 import { SignInDto } from './dtos/sign.in.dto';
@@ -45,6 +47,18 @@ export class UserService {
     return this.collection(collection).find().toArray();
   }
 
+  insertOne(
+    collection: string,
+    data,
+  ): Promise<InsertOneResult<Document>> {
+    const insertedData = data as OptionalId<Document>;
+    return this.collection(collection).insertOne(insertedData);
+  }
+
+  async signJWTToken(payload) {
+    return this.jwtService.signAsync(payload, {secret: this.configService.get('JWT_KEY')});
+  }
+
   async getUsers() {
     // This is not working for now, maybe refactor later
     // try {
@@ -68,11 +82,19 @@ export class UserService {
     const payload = { sub: user.userId, username: user.userName };
 
     return {
-      access_token: await this.jwtService.signAsync(payload, {secret: this.configService.get('JWT_KEY')}),
+      access_token: await this.signJWTToken(payload),
     };
   }
 
   async signUp(data: SignUpDto) {
-    return data;
+    await this.insertOne('users', data);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const createdUser = await this.findOne('users', {}) as any;
+    const payload = { sub: createdUser.userId, username: createdUser.userName };
+
+    return {
+      token: await this.signJWTToken(payload),
+      user: createdUser
+    }
   }
 }

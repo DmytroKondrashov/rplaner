@@ -18,7 +18,6 @@ export class ClientController {
     return this.clientService.getData();
   }
 
-  @Public()
   @Get('users')
   async getUsers(): Promise<string> {
     try {
@@ -38,6 +37,7 @@ export class ClientController {
     }
   }
 
+  @Public()
   @HttpCode(HttpStatus.OK)
   @Post('signup')
   async signUp(@Body() signUpDto: SignUpDto): Promise<string> {
@@ -48,6 +48,7 @@ export class ClientController {
     }
   }
 
+  @Public()
   @Get('profile')
   getProfile(@Req() req) {
     return true;
