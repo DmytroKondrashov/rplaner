@@ -72,9 +72,9 @@ export class UserService {
   }
 
   async login(data: SignInDto) {
-    const { userName, password } = data;
+    const { email, password } = data;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const user: any = await this.findOne('users', { userName });
+    const user: any = await this.findOne('users', { email });
     if (!user) {
       throw new NotFoundException();
     }
