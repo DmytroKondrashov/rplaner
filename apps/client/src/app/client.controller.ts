@@ -1,8 +1,9 @@
-import { Post, HttpCode, Controller, Get, HttpStatus, Inject, Body } from '@nestjs/common';
+import { Post, HttpCode, Controller, Get, HttpStatus, Inject, Body, UseGuards, Req } from '@nestjs/common';
 
 import { ClientService } from './client.service';
 import { ClientProxy } from '@nestjs/microservices';
 import { SignInDto } from './dtos/sign.in.dto';
+import { AuthGuard } from './guards/auth.guard';
 
 @Controller()
 export class ClientController {
@@ -16,7 +17,7 @@ export class ClientController {
     return this.clientService.getData();
   }
 
-  @Get('/users')
+  @Get('users')
   async getUsers(): Promise<string> {
     try {
       return this.client.send<string>({cmd: 'getUsers'}, {}).toPromise();
@@ -33,5 +34,11 @@ export class ClientController {
     } catch (error) {
       console.error('Error in /users request:', error.message);
     }
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('profile')
+  getProfile(@Req() req) {
+    return true;
   }
 }
