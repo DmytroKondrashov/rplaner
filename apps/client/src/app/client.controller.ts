@@ -39,7 +39,7 @@ export class ClientController {
   }
 
   @HttpCode(HttpStatus.OK)
-  @Post('login')
+  @Post('signup')
   async signUp(@Body() signUpDto: SignUpDto): Promise<string> {
     try {
       return this.client.send<string>({cmd: 'signUp'}, signUpDto).toPromise();
