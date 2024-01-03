@@ -1,7 +1,5 @@
 import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-// import { ClientProxy } from '@nestjs/microservices';
-// import { Db, MongoClient } from 'mongodb';
 import {
   Collection,
   Db,
@@ -9,6 +7,7 @@ import {
   WithId,
 } from 'mongodb';
 import { SignInDto } from './dtos/sign.in.dto';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UserService {
@@ -17,6 +16,7 @@ export class UserService {
 
   constructor(
     private readonly configService: ConfigService,
+    private jwtService: JwtService
     // @Inject('MONGO_SERVICE') private client: ClientProxy,
   ) {}
 
@@ -64,7 +64,10 @@ export class UserService {
     if (user?.password !== password) {
       throw new UnauthorizedException();
     }
+    const payload = { sub: user.userId, username: user.userName };
 
-    return user;
+    return {
+      access_token: await this.jwtService.signAsync(payload, {secret: `${process.env.JWT_KEY}`}),
+    };
   }
 }

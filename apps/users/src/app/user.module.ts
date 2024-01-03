@@ -4,6 +4,7 @@ import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { ConfigService } from '@nestjs/config';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   // imports: [MongoModule.forRoot('mongodb://localhost', 'rplaner')],
@@ -20,6 +21,6 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
     ]),
   ],
   controllers: [UserController],
-  providers: [UserService, ConfigService],
+  providers: [UserService, ConfigService, JwtService],
 })
 export class UserModule {}
