@@ -3,6 +3,7 @@ import { Controller, Inject } from '@nestjs/common';
 import { ClientProxy, MessagePattern } from '@nestjs/microservices';
 import { UserService } from './user.service';
 import { SignInDto } from './dtos/sign.in.dto';
+import { SignUpDto } from './dtos/sign.up.dto';
 
 @Controller()
 export class UserController {
@@ -19,5 +20,10 @@ export class UserController {
   @MessagePattern({cmd: 'login'})
   login(data: SignInDto): Promise<unknown> {
     return this.userService.login(data);
+  }
+
+  @MessagePattern({cmd: 'signUp'})
+  signUp(data: SignUpDto): Promise<unknown> {
+    return this.userService.signUp(data);
   }
 }

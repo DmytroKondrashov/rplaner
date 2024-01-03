@@ -8,6 +8,7 @@ import {
 } from 'mongodb';
 import { SignInDto } from './dtos/sign.in.dto';
 import { JwtService } from '@nestjs/jwt';
+import { SignUpDto } from './dtos/sign.up.dto';
 
 @Injectable()
 export class UserService {
@@ -69,5 +70,9 @@ export class UserService {
     return {
       access_token: await this.jwtService.signAsync(payload, {secret: this.configService.get('JWT_KEY')}),
     };
+  }
+
+  async signUp(data: SignUpDto) {
+    return data;
   }
 }
