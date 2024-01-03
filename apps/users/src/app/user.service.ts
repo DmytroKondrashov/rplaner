@@ -67,7 +67,7 @@ export class UserService {
     const payload = { sub: user.userId, username: user.userName };
 
     return {
-      access_token: await this.jwtService.signAsync(payload, {secret: `${process.env.JWT_KEY}`}),
+      access_token: await this.jwtService.signAsync(payload, {secret: this.configService.get('JWT_KEY')}),
     };
   }
 }
