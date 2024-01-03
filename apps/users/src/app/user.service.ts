@@ -89,7 +89,7 @@ export class UserService {
   async signUp(data: SignUpDto) {
     await this.insertOne('users', data);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const createdUser = await this.findOne('users', {}) as any;
+    const createdUser = await this.findOne('users', { userName: data.userName }) as any;
     const payload = { sub: createdUser.userId, username: createdUser.userName };
 
     return {
