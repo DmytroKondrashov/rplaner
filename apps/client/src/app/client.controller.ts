@@ -27,6 +27,7 @@ export class ClientController {
     }
   }
 
+  @Public()
   @HttpCode(HttpStatus.OK)
   @Post('login')
   async login(@Body() signInDto: SignInDto): Promise<string> {

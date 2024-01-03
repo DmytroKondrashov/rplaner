@@ -1,3 +1,4 @@
+import bcrypt from 'bcrypt';
 import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import {
@@ -16,6 +17,7 @@ import { SignUpDto } from './dtos/sign.up.dto';
 export class UserService {
   database: Db;
   client: MongoClient;
+  saltRounds = 10;
 
   constructor(
     private readonly configService: ConfigService,
@@ -76,7 +78,8 @@ export class UserService {
     if (!user) {
       throw new NotFoundException();
     }
-    if (user?.password !== password) {
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    if (!passwordMatch) {
       throw new UnauthorizedException();
     }
     const payload = { sub: user.userId, username: user.userName };
@@ -87,6 +90,9 @@ export class UserService {
   }
 
   async signUp(data: SignUpDto) {
+    const hash = await bcrypt.hash(data.password, this.saltRounds);
+    delete data.passwordConfirmation;
+    data.password = hash;
     await this.insertOne('users', data);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const createdUser = await this.findOne('users', { userName: data.userName }) as any;
