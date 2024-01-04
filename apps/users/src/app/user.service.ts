@@ -45,7 +45,8 @@ export class UserService {
     return this.collection(collection).findOne(query);
   }
 
-  findAll(collection: string): unknown {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  findAll(collection: string): any {
     return this.collection(collection).find().toArray();
   }
 
@@ -68,7 +69,9 @@ export class UserService {
     // } catch (error) {
     //   console.error('Error in /users request:', error.message);
     // }
-    return this.findAll('users');
+    const users = await this.findAll('users');
+    users.map(user => delete user.password);
+    return users;
   }
 
   async login(data: SignInDto) {
