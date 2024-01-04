@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import {
   Collection,
@@ -90,17 +90,23 @@ export class UserService {
   }
 
   async signUp(data: SignUpDto) {
-    const hash = await bcrypt.hash(data.password, this.saltRounds);
-    delete data.passwordConfirmation;
-    data.password = hash;
-    await this.insertOne('users', data);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const createdUser = await this.findOne('users', { userName: data.userName }) as any;
-    const payload = { sub: createdUser.userId, username: createdUser.userName };
-
-    return {
-      token: await this.signJWTToken(payload),
-      user: createdUser
+    const existingUser = await this.findOne('users', {email: data.email});
+    if (existingUser) {
+      throw new BadRequestException
+    } else {
+      const hash = await bcrypt.hash(data.password, this.saltRounds);
+      delete data.passwordConfirmation;
+      data.password = hash;
+      await this.insertOne('users', data);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const createdUser = await this.findOne('users', { userName: data.userName }) as any;
+      delete createdUser.password;
+      const payload = { sub: createdUser.userId, username: createdUser.userName };
+  
+      return {
+        token: await this.signJWTToken(payload),
+        user: createdUser
+      }
     }
   }
 }
