@@ -14,12 +14,7 @@ export class ClientController {
     private readonly clientService: ClientService
   ) {}
 
-  @Get()
-  getData() {
-    return this.clientService.getData();
-  }
-
-  @Get('users')
+  @Get('users/index')
   async getUsers(): Promise<string> {
     try {
       return this.client.send<string>({cmd: 'getUsers'}, {}).toPromise();
@@ -30,7 +25,7 @@ export class ClientController {
 
   @Public()
   @HttpCode(HttpStatus.OK)
-  @Post('login')
+  @Post('users/login')
   async login(@Body() signInDto: SignInDto): Promise<string> {
     try {
       return this.client.send<string>({cmd: 'login'}, signInDto).toPromise();
@@ -42,7 +37,7 @@ export class ClientController {
   @Public()
   @HttpCode(HttpStatus.OK)
   @UseGuards(PasswordConfirmationGuard)
-  @Post('signup')
+  @Post('users/signup')
   async signUp(@Body() signUpDto: SignUpDto): Promise<string> {
     try {
       return this.client.send<string>({cmd: 'signUp'}, signUpDto).toPromise();
@@ -51,7 +46,7 @@ export class ClientController {
     }
   }
 
-  @Get('profile')
+  @Get('users/profile')
   getProfile(@Req() req) {
     return true;
   }
