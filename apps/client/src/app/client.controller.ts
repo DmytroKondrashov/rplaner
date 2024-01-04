@@ -1,10 +1,11 @@
-import { Post, HttpCode, Controller, Get, HttpStatus, Inject, Body, Req } from '@nestjs/common';
+import { Post, HttpCode, Controller, Get, HttpStatus, Inject, Body, Req, UseGuards } from '@nestjs/common';
 
 import { ClientService } from './client.service';
 import { ClientProxy } from '@nestjs/microservices';
 import { SignInDto } from './dtos/sign.in.dto';
 import { Public } from './decorators/public.decorator'
 import { SignUpDto } from './dtos/sign.up.dto';
+import { PasswordConfirmationGuard } from './guards/password.confirmation.guard';
 
 @Controller()
 export class ClientController {
@@ -40,6 +41,7 @@ export class ClientController {
 
   @Public()
   @HttpCode(HttpStatus.OK)
+  @UseGuards(PasswordConfirmationGuard)
   @Post('signup')
   async signUp(@Body() signUpDto: SignUpDto): Promise<string> {
     try {
