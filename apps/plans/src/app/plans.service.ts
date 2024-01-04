@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Db, MongoClient } from 'mongodb';
+import { Collection, Db, InsertOneResult, MongoClient, OptionalId, WithId } from 'mongodb';
 
 @Injectable()
 export class PlansService {
@@ -23,7 +23,29 @@ export class PlansService {
     await this.client.close();
   }
 
-  async createList(data) {
-    console.log(data)
+  collection(collectionName: string): Collection<Document> {
+    return this.database.collection(collectionName);
+  }
+
+  insertOne(
+    collection: string,
+    data,
+  ): Promise<InsertOneResult<Document>> {
+    const insertedData = data as OptionalId<Document>;
+    return this.collection(collection).insertOne(insertedData);
+  }
+
+  findOne(collection: string, query): Promise<WithId<Document>> {
+    return this.collection(collection).findOne(query);
+  }
+
+  async createList(listName) {
+    const existingList = await this.findOne('lists', { name: listName });
+    if (existingList) {
+      throw new BadRequestException
+    } else {
+      await this.insertOne('lists', { name: listName });
+      return this.findOne('lists', { name: listName });
+    }
   }
 }
