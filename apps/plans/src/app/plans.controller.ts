@@ -5,10 +5,10 @@ import { MessagePattern } from '@nestjs/microservices';
 
 @Controller()
 export class PlansController {
-  constructor(private readonly appService: PlansService) {}
+  constructor(private readonly plansService: PlansService) {}
 
-  @MessagePattern('createList')
-  createList(): string {
-    return 'Plans microservice - createList';
+  @MessagePattern('newList')
+  createList(data: string): unknown {
+    return this.plansService.createList(data);
   }
 }

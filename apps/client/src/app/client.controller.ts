@@ -19,7 +19,7 @@ export class ClientController {
     try {
       return this.client.send<string>({cmd: 'getUsers'}, {}).toPromise();
     } catch (error) {
-      console.error('Error in /users request:', error.message);
+      console.error('Error in /users/index request:', error.message);
     }
   }
 
@@ -30,7 +30,7 @@ export class ClientController {
     try {
       return this.client.send<string>({cmd: 'login'}, signInDto).toPromise();
     } catch (error) {
-      console.error('Error in /users request:', error.message);
+      console.error('Error in /users/login request:', error.message);
     }
   }
 
@@ -42,12 +42,21 @@ export class ClientController {
     try {
       return this.client.send<string>({cmd: 'signUp'}, signUpDto).toPromise();
     } catch (error) {
-      console.error('Error in /users request:', error.message);
+      console.error('Error in /users/signup request:', error.message);
     }
   }
 
   @Get('users/profile')
   getProfile(@Req() req) {
     return true;
+  }
+
+  @Post('lists/new')
+  async newList(@Body() listName: string): Promise<string> {
+    try {
+      return this.client.send<string>({cmd: 'newList'}, listName).toPromise();
+    } catch (error) {
+      console.error('Error in /lists/new request:', error.message);
+    }
   }
 }
