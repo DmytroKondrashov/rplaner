@@ -49,7 +49,6 @@ export class ClientController {
     }
   }
 
-  @Public()
   @Get('profile')
   getProfile(@Req() req) {
     return true;
