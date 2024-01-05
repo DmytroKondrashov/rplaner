@@ -7,7 +7,7 @@ import { MessagePattern } from '@nestjs/microservices';
 export class PlansController {
   constructor(private readonly plansService: PlansService) {}
 
-  @MessagePattern('newList')
+  @MessagePattern({ cmd: 'newList' })
   createList(data: string): unknown {
     return this.plansService.createList(data);
   }

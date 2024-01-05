@@ -10,14 +10,15 @@ import { PasswordConfirmationGuard } from './guards/password.confirmation.guard'
 @Controller()
 export class ClientController {
   constructor(
-    @Inject('USERS_SERVICE') private client: ClientProxy,
+    @Inject('USERS_SERVICE') private readonly usersClient: ClientProxy,
+    @Inject('PLANS_SERVICE') private readonly plansClient: ClientProxy,
     private readonly clientService: ClientService
   ) {}
 
   @Get('users/index')
   async getUsers(): Promise<string> {
     try {
-      return this.client.send<string>({cmd: 'getUsers'}, {}).toPromise();
+      return this.usersClient.send<string>({cmd: 'getUsers'}, {}).toPromise();
     } catch (error) {
       console.error('Error in /users/index request:', error.message);
     }
@@ -28,7 +29,7 @@ export class ClientController {
   @Post('users/login')
   async login(@Body() signInDto: SignInDto): Promise<string> {
     try {
-      return this.client.send<string>({cmd: 'login'}, signInDto).toPromise();
+      return this.usersClient.send<string>({cmd: 'login'}, signInDto).toPromise();
     } catch (error) {
       console.error('Error in /users/login request:', error.message);
     }
@@ -40,7 +41,7 @@ export class ClientController {
   @Post('users/signup')
   async signUp(@Body() signUpDto: SignUpDto): Promise<string> {
     try {
-      return this.client.send<string>({cmd: 'signUp'}, signUpDto).toPromise();
+      return this.usersClient.send<string>({cmd: 'signUp'}, signUpDto).toPromise();
     } catch (error) {
       console.error('Error in /users/signup request:', error.message);
     }
@@ -54,7 +55,7 @@ export class ClientController {
   @Post('lists/new')
   async newList(@Body() listName: string): Promise<string> {
     try {
-      return this.client.send<string>({cmd: 'newList'}, listName).toPromise();
+      return this.plansClient.send<string>({cmd: 'newList'}, listName).toPromise();
     } catch (error) {
       console.error('Error in /lists/new request:', error.message);
     }

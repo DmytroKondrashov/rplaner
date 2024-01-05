@@ -19,6 +19,14 @@ import { AuthGuard } from './guards/auth.guard';
           queue: 'users_queue',
         },
       },
+      {
+        name: 'PLANS_SERVICE',
+        transport: Transport.RMQ,
+        options: {
+          urls: ['amqp://localhost:5672'],
+          queue: 'plans_queue',
+        },
+      },
     ]),
   ],
   controllers: [ClientController],

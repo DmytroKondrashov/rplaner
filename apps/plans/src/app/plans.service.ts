@@ -44,8 +44,8 @@ export class PlansService {
     if (existingList) {
       throw new BadRequestException
     } else {
-      await this.insertOne('lists', { name: listName });
-      return this.findOne('lists', { name: listName });
+      await this.insertOne('lists', listName);
+      return this.findOne('lists', listName);
     }
   }
 }
