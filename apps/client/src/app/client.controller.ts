@@ -8,7 +8,7 @@ import { SignUpDto } from './dtos/sign.up.dto';
 import { PasswordConfirmationGuard } from './guards/password.confirmation.guard';
 import { Token } from './decorators/token.decorator';
 import { CreateListDto } from './dtos/create.list.dto';
-import { GetListDto } from './dtos/get,list.dto';
+import { GetListDto } from './dtos/get.list.dto';
 
 @Controller()
 export class ClientController {
