@@ -62,6 +62,13 @@ export class UserService {
     return this.jwtService.signAsync(payload, {secret: this.configService.get('JWT_KEY')});
   }
 
+  formJWTPayload(username, id) {
+    return {
+      username,
+      id: id.toString()
+    }
+  }
+
   async getUsers() {
     // This is not working for now, maybe refactor later
     // try {
@@ -85,7 +92,7 @@ export class UserService {
     if (!passwordMatch) {
       throw new UnauthorizedException();
     }
-    const payload = { sub: user.userId, username: user.userName };
+    const payload = this.formJWTPayload(user.userName, user._id)
 
     return {
       access_token: await this.signJWTToken(payload),
@@ -104,7 +111,7 @@ export class UserService {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const createdUser = await this.findOne('users', { userName: data.userName }) as any;
       delete createdUser.password;
-      const payload = { sub: createdUser.userId, username: createdUser.userName };
+      const payload = this.formJWTPayload(createdUser.userName, createdUser._id)
   
       return {
         token: await this.signJWTToken(payload),

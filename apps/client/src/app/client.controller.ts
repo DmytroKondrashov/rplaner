@@ -6,6 +6,8 @@ import { SignInDto } from './dtos/sign.in.dto';
 import { Public } from './decorators/public.decorator'
 import { SignUpDto } from './dtos/sign.up.dto';
 import { PasswordConfirmationGuard } from './guards/password.confirmation.guard';
+import { Token } from './decorators/token.decorator';
+import { CreateListDto } from './dtos/create.list.dto';
 
 @Controller()
 export class ClientController {
@@ -53,9 +55,13 @@ export class ClientController {
   }
 
   @Post('lists/new')
-  async newList(@Body() listName: string): Promise<string> {
+  async newList(
+    @Body() data: CreateListDto,
+    @Token() token: string,
+    ): Promise<string> {
     try {
-      return this.plansClient.send<string>({cmd: 'newList'}, listName).toPromise();
+      const listName = data.listName;
+      return this.plansClient.send<string>({cmd: 'newList'}, { listName, token }).toPromise();
     } catch (error) {
       console.error('Error in /lists/new request:', error.message);
     }

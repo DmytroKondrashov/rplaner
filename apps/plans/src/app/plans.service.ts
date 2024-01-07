@@ -23,6 +23,14 @@ export class PlansService {
     await this.client.close();
   }
 
+  getUserIdFromToken(token: string): string {
+    const data = Buffer.from(token, 'base64')
+      .toString('ascii')
+      .match(/"id":"(.+)",/)[0];
+    const clearedId = JSON.parse(`{${data.slice(0, -1)}}`);
+    return clearedId.id;
+  }
+
   collection(collectionName: string): Collection<Document> {
     return this.database.collection(collectionName);
   }
@@ -39,13 +47,16 @@ export class PlansService {
     return this.collection(collection).findOne(query);
   }
 
-  async createList(listName) {
+  async createList(data) {
+    const { listName, token } = data;
+    console.log(listName)
+    const userId = this.getUserIdFromToken(token);
     const existingList = await this.findOne('lists', { name: listName });
     if (existingList) {
       throw new BadRequestException
     } else {
-      await this.insertOne('lists', listName);
-      return this.findOne('lists', listName);
+      await this.insertOne('lists', { listName, userId });
+      return this.findOne('lists', { listName, userId });
     }
   }
 }
