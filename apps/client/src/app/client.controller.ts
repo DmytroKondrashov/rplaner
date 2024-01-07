@@ -1,4 +1,4 @@
-import { Post, HttpCode, Controller, Get, HttpStatus, Inject, Body, Req, UseGuards } from '@nestjs/common';
+import { Post, HttpCode, Controller, Get, HttpStatus, Inject, Body, Req, UseGuards, Query } from '@nestjs/common';
 
 import { ClientService } from './client.service';
 import { ClientProxy } from '@nestjs/microservices';
@@ -8,6 +8,7 @@ import { SignUpDto } from './dtos/sign.up.dto';
 import { PasswordConfirmationGuard } from './guards/password.confirmation.guard';
 import { Token } from './decorators/token.decorator';
 import { CreateListDto } from './dtos/create.list.dto';
+import { GetListDto } from './dtos/get,list.dto';
 
 @Controller()
 export class ClientController {
@@ -64,6 +65,17 @@ export class ClientController {
       return this.plansClient.send<string>({cmd: 'newList'}, { listName, token }).toPromise();
     } catch (error) {
       console.error('Error in /lists/new request:', error.message);
+    }
+  }
+
+  @Get('list')
+  async getList(
+    @Query() { list }: GetListDto,
+  ): Promise<string> {
+    try {
+      return this.plansClient.send<string>({cmd: 'getList'}, { list }).toPromise();
+    } catch (error) {
+      console.error('Error in /list request:', error.message);
     }
   }
 }
