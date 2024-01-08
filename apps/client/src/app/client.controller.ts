@@ -68,7 +68,7 @@ export class ClientController {
     }
   }
 
-  @Get('list')
+  @Get('lists/list')
   async getList(
     @Query() { listName }: GetListDto,
   ): Promise<string> {
