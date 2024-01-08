@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 
-import { ClientController } from './client.controller';
-import { ClientService } from './client.service';
+import { UsersController } from './users.controller';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './guards/auth.guard';
+import { ListsController } from './lists.controller';
 
 @Module({
   imports: [
@@ -29,8 +29,8 @@ import { AuthGuard } from './guards/auth.guard';
       },
     ]),
   ],
-  controllers: [ClientController],
-  providers: [ClientService, JwtService, ConfigService,  {
+  controllers: [UsersController, ListsController],
+  providers: [JwtService, ConfigService,  {
     provide: APP_GUARD,
     useClass: AuthGuard,
   },],
