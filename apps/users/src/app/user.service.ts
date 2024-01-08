@@ -81,6 +81,10 @@ export class UserService {
     return users;
   }
 
+  async getUserProfile(query) {
+    return this.findOne('users', query);
+  }
+
   async login(data: SignInDto) {
     const { email, password } = data;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -9,6 +9,7 @@ import { PasswordConfirmationGuard } from './guards/password.confirmation.guard'
 import { Token } from './decorators/token.decorator';
 import { CreateListDto } from './dtos/create.list.dto';
 import { GetListDto } from './dtos/get.list.dto';
+import { GetUserProfileGuard } from './guards/get.user.profile.guard';
 
 @Controller()
 export class ClientController {
@@ -51,8 +52,13 @@ export class ClientController {
   }
 
   @Get('users/profile')
-  getProfile(@Req() req) {
-    return true;
+  @UseGuards(GetUserProfileGuard)
+  getUserProfile(@Query() query) {
+    try {
+      return this.usersClient.send<string>({cmd: 'getUserProfile'}, query).toPromise();
+    } catch (error) {
+      console.error('Error in /users/signup request:', error.message);
+    }
   }
 
   @Post('lists/new')

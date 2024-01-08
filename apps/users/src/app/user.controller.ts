@@ -17,6 +17,11 @@ export class UserController {
     return this.userService.getUsers();
   }
 
+  @MessagePattern({cmd: 'getUserProfile'})
+  getUserProfile(query): Promise<unknown> {
+    return this.userService.getUserProfile(query);
+  }
+
   @MessagePattern({cmd: 'login'})
   login(data: SignInDto): Promise<unknown> {
     return this.userService.login(data);
