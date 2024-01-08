@@ -4,5 +4,5 @@ import { IsString } from 'class-validator';
 export class GetListDto {
   @ApiProperty()
   @IsString()
-  list: string;
+  listName: string;
 }

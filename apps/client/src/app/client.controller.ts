@@ -70,10 +70,10 @@ export class ClientController {
 
   @Get('list')
   async getList(
-    @Query() { list }: GetListDto,
+    @Query() { listName }: GetListDto,
   ): Promise<string> {
     try {
-      return this.plansClient.send<string>({cmd: 'getList'}, { list }).toPromise();
+      return this.plansClient.send<string>({cmd: 'getList'}, listName).toPromise();
     } catch (error) {
       console.error('Error in /list request:', error.message);
     }

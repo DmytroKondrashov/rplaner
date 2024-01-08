@@ -12,4 +12,9 @@ export class PlansController {
   createList(data: string): Promise<WithId<Document>> {
     return this.plansService.createList(data);
   }
+
+  @MessagePattern({ cmd: 'getList' })
+  getList(listName: string): Promise<WithId<Document>> {
+    return this.plansService.getList(listName);
+  }
 }

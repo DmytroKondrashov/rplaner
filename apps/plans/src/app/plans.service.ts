@@ -59,4 +59,8 @@ export class PlansService {
       return this.findOne('lists', { listName, userId });
     }
   }
+
+  async getList(listName) {
+    return this.findOne('lists', { listName });
+  }
 }
