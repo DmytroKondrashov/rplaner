@@ -7,6 +7,7 @@ import {
   DeleteResult,
   InsertOneResult,
   MongoClient,
+  ObjectId,
   OptionalId,
   WithId,
 } from 'mongodb';
@@ -130,7 +131,12 @@ export class UserService {
     }
   }
 
-  async deleteUser(data) {
-    await this.deleteOne('users', {})
+  async deleteUser(id) {
+    try {
+      await this.deleteOne('users', { _id: new ObjectId(id) });
+      return 'User was successfully deleted'
+    } catch (error) {
+      return 'Some error occured while deleting user'
+    }
   }
 }
