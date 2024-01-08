@@ -4,6 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import {
   Collection,
   Db,
+  DeleteResult,
   InsertOneResult,
   MongoClient,
   OptionalId,
@@ -48,6 +49,11 @@ export class UserService {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   findAll(collection: string): any {
     return this.collection(collection).find().toArray();
+  }
+
+
+  deleteOne(collection: string, query): Promise<DeleteResult> {
+    return this.collection(collection).deleteOne(query);
   }
 
   insertOne(
@@ -122,5 +128,9 @@ export class UserService {
         user: createdUser
       }
     }
+  }
+
+  async deleteUser(data) {
+    await this.deleteOne('users', {})
   }
 }

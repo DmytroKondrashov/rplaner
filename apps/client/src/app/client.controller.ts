@@ -1,4 +1,4 @@
-import { Post, HttpCode, Controller, Get, HttpStatus, Inject, Body, Req, UseGuards, Query } from '@nestjs/common';
+import { Post, HttpCode, Controller, Get, HttpStatus, Inject, Body, Delete, UseGuards, Query, Param } from '@nestjs/common';
 
 import { ClientService } from './client.service';
 import { ClientProxy } from '@nestjs/microservices';
@@ -57,7 +57,16 @@ export class ClientController {
     try {
       return this.usersClient.send<string>({cmd: 'getUserProfile'}, query).toPromise();
     } catch (error) {
-      console.error('Error in /users/signup request:', error.message);
+      console.error('Error in /users/profile request:', error.message);
+    }
+  }
+
+  @Delete('users/delete')
+  deleteUser(@Param('_id') _id: string) {
+    try {
+      return this.usersClient.send<string>({cmd: 'deleteUser'}, _id).toPromise();
+    } catch (error) {
+      console.error('Error in /users/delete request:', error.message);
     }
   }
 
