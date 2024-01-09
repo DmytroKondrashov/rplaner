@@ -69,6 +69,18 @@ export class UserService {
     return this.jwtService.signAsync(payload, {secret: this.configService.get('JWT_KEY')});
   }
 
+  updateOne(
+    collection: string,
+    query,
+    data,
+  ): Promise<unknown> {
+    return this.collection(collection).updateOne(
+      query,
+      { $set: data },
+      { upsert: true },
+    );
+  }
+
   formJWTPayload(username, id) {
     return {
       username,
@@ -97,7 +109,10 @@ export class UserService {
   }
 
   async getUserProfile(query) {
-    return this.findOne('users', query);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const userProfile = await this.findOne('users', query) as any;
+    delete userProfile.password;
+    return userProfile;
   }
 
   async login(data: SignInDto) {
@@ -136,6 +151,17 @@ export class UserService {
         token: await this.signJWTToken(payload),
         user: createdUser
       }
+    }
+  }
+
+  async edit(query) {
+    const { data, token } = query;
+    const currentUserId = this.getUserIdFromToken(token)
+    try {
+      await this.updateOne('users', {_id: new ObjectId(currentUserId)}, data)
+      return this.getUserProfile({_id: new ObjectId(currentUserId)})
+    } catch (error) {
+      return 'Some error occured while updating user'
     }
   }
 

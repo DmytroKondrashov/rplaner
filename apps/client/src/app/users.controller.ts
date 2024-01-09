@@ -7,6 +7,7 @@ import { SignUpDto } from './dtos/sign.up.dto';
 import { PasswordConfirmationGuard } from './guards/password.confirmation.guard';
 import { GetUserProfileGuard } from './guards/get.user.profile.guard';
 import { Token } from './decorators/token.decorator';
+import { EditUserDto } from './dtos/edit.user.dto';
 
 @Controller('users')
 export class UsersController {
@@ -53,6 +54,19 @@ export class UsersController {
       return this.usersClient.send<string>({cmd: 'getUserProfile'}, query).toPromise();
     } catch (error) {
       console.error('Error in /users/profile request:', error.message);
+    }
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('edit')
+  async edit(
+    @Body() data: EditUserDto,
+    @Token() token: string,
+    ): Promise<string> {
+    try {
+      return this.usersClient.send<string>({cmd: 'edit'}, { data, token }).toPromise();
+    } catch (error) {
+      console.error('Error in /users/signup request:', error.message);
     }
   }
 

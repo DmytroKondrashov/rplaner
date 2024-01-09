@@ -32,6 +32,11 @@ export class UserController {
     return this.userService.signUp(data);
   }
 
+  @MessagePattern({cmd: 'edit'})
+  edit(data): Promise<unknown> {
+    return this.userService.edit(data);
+  }
+
   @MessagePattern({cmd: 'deleteUser'})
   deleteUser(data): Promise<unknown> {
     return this.userService.deleteUser(data);
