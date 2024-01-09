@@ -12,6 +12,17 @@ export class ListsController {
     @Inject('PLANS_SERVICE') private readonly plansClient: ClientProxy,
   ) {}
 
+  @Get('index')
+  async getLists(
+    @Token() token: string,
+  ): Promise<string> {
+    try {
+      return this.plansClient.send<string>({cmd: 'getLists'}, token).toPromise();
+    } catch (error) {
+      console.error('Error in /lists request:', error.message);
+    }
+  }
+
   @Post('new')
   async newList(
     @Body() data: CreateListDto,

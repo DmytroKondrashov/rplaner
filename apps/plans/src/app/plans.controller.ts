@@ -8,6 +8,11 @@ import { WithId } from 'mongodb';
 export class PlansController {
   constructor(private readonly plansService: PlansService) {}
 
+  @MessagePattern({ cmd: 'getLists' })
+  getLists(token: string): Promise<WithId<Document>[]> {
+    return this.plansService.getLists(token);
+  }
+
   @MessagePattern({ cmd: 'newList' })
   createList(data: string): Promise<WithId<Document>> {
     return this.plansService.createList(data);

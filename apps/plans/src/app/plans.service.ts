@@ -35,6 +35,11 @@ export class PlansService {
     return this.database.collection(collectionName);
   }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    findAll(collection: string): any {
+      return this.collection(collection).find().toArray();
+    }
+
   insertOne(
     collection: string,
     data,
@@ -92,5 +97,11 @@ export class PlansService {
     } else {
       throw new BadRequestException('You can only modify the lists that belongs to you')
     }
+  }
+
+  async getLists(token) {
+    const userId = this.getUserIdFromToken(token);
+    const collection = this.collection('lists');
+    return collection.find({ userId }).toArray();
   }
 }
