@@ -6,6 +6,7 @@ import { Public } from './decorators/public.decorator'
 import { SignUpDto } from './dtos/sign.up.dto';
 import { PasswordConfirmationGuard } from './guards/password.confirmation.guard';
 import { GetUserProfileGuard } from './guards/get.user.profile.guard';
+import { Token } from './decorators/token.decorator';
 
 @Controller('users')
 export class UsersController {
@@ -56,9 +57,12 @@ export class UsersController {
   }
 
   @Delete(':id')
-  deleteUser(@Param('id') id: string) {
+  deleteUser(
+    @Param('id') id: string,
+    @Token() token: string,
+    ) {
     try {
-      return this.usersClient.send<string>({cmd: 'deleteUser'}, id).toPromise();
+      return this.usersClient.send<string>({cmd: 'deleteUser'}, { id, token }).toPromise();
     } catch (error) {
       console.error('Error in /users/delete request:', error.message);
     }

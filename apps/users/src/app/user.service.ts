@@ -76,6 +76,14 @@ export class UserService {
     }
   }
 
+  getUserIdFromToken(token: string): string {
+    const data = Buffer.from(token, 'base64')
+      .toString('ascii')
+      .match(/"id":"(.+)",/)[0];
+    const clearedId = JSON.parse(`{${data.slice(0, -1)}}`);
+    return clearedId.id;
+  }
+
   async getUsers() {
     // This is not working for now, maybe refactor later
     // try {
@@ -113,7 +121,7 @@ export class UserService {
   async signUp(data: SignUpDto) {
     const existingUser = await this.findOne('users', {email: data.email});
     if (existingUser) {
-      throw new BadRequestException
+      throw new BadRequestException('A user with this email allready exist!')
     } else {
       const hash = await bcrypt.hash(data.password, this.saltRounds);
       delete data.passwordConfirmation;
@@ -131,12 +139,18 @@ export class UserService {
     }
   }
 
-  async deleteUser(id) {
-    try {
-      await this.deleteOne('users', { _id: new ObjectId(id) });
-      return 'User was successfully deleted'
-    } catch (error) {
-      return 'Some error occured while deleting user'
+  async deleteUser(data) {
+    const { id, token } = data;
+    const userId = this.getUserIdFromToken(token);
+    if (userId === id) {
+      try {
+        await this.deleteOne('users', { _id: new ObjectId(id) });
+        return 'User was successfully deleted'
+      } catch (error) {
+        return 'Some error occured while deleting user'
+      }
+    } else {
+      throw new BadRequestException('You can only unsubscribe yourself')
     }
   }
 }
