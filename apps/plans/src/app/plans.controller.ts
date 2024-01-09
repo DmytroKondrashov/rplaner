@@ -17,4 +17,9 @@ export class PlansController {
   getList(listName: string): Promise<WithId<Document>> {
     return this.plansService.getList(listName);
   }
+
+  @MessagePattern({ cmd: 'editList' })
+  editList(data: string) {
+    return this.plansService.editList(data);
+  }
 }

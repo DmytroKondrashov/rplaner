@@ -4,6 +4,7 @@ import { ClientProxy } from '@nestjs/microservices';
 import { Token } from './decorators/token.decorator';
 import { CreateListDto } from './dtos/create.list.dto';
 import { GetListDto } from './dtos/get.list.dto';
+import { UpdateListDto } from './dtos/update.list.dto';
 
 @Controller('lists')
 export class ListsController {
@@ -32,6 +33,22 @@ export class ListsController {
       return this.plansClient.send<string>({cmd: 'getList'}, listName).toPromise();
     } catch (error) {
       console.error('Error in /list request:', error.message);
+    }
+  }
+
+  @Post('edit')
+  async editList(
+    @Body()
+    {
+      id,
+      listName,
+    }: UpdateListDto,
+    @Token() token: string,
+    ): Promise<string> {
+    try {
+      return this.plansClient.send<string>({cmd: 'editList'}, { id, listName, token }).toPromise();
+    } catch (error) {
+      console.error('Error in /lists/new request:', error.message);
     }
   }
 }

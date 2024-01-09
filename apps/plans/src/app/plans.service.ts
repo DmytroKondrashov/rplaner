@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Collection, Db, InsertOneResult, MongoClient, OptionalId, WithId } from 'mongodb';
+import { Collection, Db, InsertOneResult, MongoClient, ObjectId, OptionalId, WithId } from 'mongodb';
 
 @Injectable()
 export class PlansService {
@@ -47,13 +47,25 @@ export class PlansService {
     return this.collection(collection).findOne(query);
   }
 
+  updateOne(
+    collection: string,
+    query,
+    data,
+  ): Promise<unknown> {
+    return this.collection(collection).updateOne(
+      query,
+      { $set: data },
+      { upsert: true },
+    );
+  }
+
   async createList(data) {
     const { listName, token } = data;
     console.log(listName)
     const userId = this.getUserIdFromToken(token);
     const existingList = await this.findOne('lists', { name: listName });
     if (existingList) {
-      throw new BadRequestException
+      throw new BadRequestException('List with this name allready exist!')
     } else {
       await this.insertOne('lists', { listName, userId });
       return this.findOne('lists', { listName, userId });
@@ -62,5 +74,23 @@ export class PlansService {
 
   async getList(listName) {
     return this.findOne('lists', { listName });
+  }
+
+
+  async editList(data) {
+    const { id, listName, token } = data;
+    const userId = this.getUserIdFromToken(token);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const existingList = this.findOne('lists', { _id: new ObjectId(id) }) as any;
+    if (userId === existingList.userId) {
+      try {
+        await this.updateOne('lists', {_id: new ObjectId(id)}, { listName })
+        return this.findOne('lists', { _id: new ObjectId(id) })
+      } catch (error) {
+        return 'Some error occured while updating the list'
+      }
+    } else {
+      throw new BadRequestException('You can only modify the lists that belongs to you')
+    }
   }
 }
