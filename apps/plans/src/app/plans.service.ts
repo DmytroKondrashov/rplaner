@@ -124,4 +124,14 @@ export class PlansService {
       throw new BadRequestException('You can only delete your own lists')
     }
   }
+
+  async cretePlan(data) {
+    const { listId, content, orderNumber } = data
+    try {
+      const createdList = await this.insertOne('plans', { listId, content, orderNumber });
+      return this.findOne('plans', { _id: createdList.insertedId })
+    } catch (error) {
+      return 'Some error occured while creating plan'
+    }
+  }
 }

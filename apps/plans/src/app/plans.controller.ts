@@ -32,4 +32,9 @@ export class PlansController {
   deleteList(data: string) {
     return this.plansService.deleteList(data);
   }
+
+  @MessagePattern({ cmd: 'cretePlan' })
+  createPlan(data: string) {
+    return this.plansService.cretePlan(data);
+  }
 }

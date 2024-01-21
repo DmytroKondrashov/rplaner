@@ -7,6 +7,7 @@ import { ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './guards/auth.guard';
 import { ListsController } from './lists.controller';
+import { PlansController } from './plans.controller';
 
 @Module({
   imports: [
@@ -29,7 +30,7 @@ import { ListsController } from './lists.controller';
       },
     ]),
   ],
-  controllers: [UsersController, ListsController],
+  controllers: [UsersController, ListsController, PlansController],
   providers: [JwtService, ConfigService,  {
     provide: APP_GUARD,
     useClass: AuthGuard,
