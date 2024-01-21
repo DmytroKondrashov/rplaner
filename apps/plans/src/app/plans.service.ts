@@ -121,17 +121,29 @@ export class PlansService {
         return 'Some error occured while deleting list'
       }
     } else {
-      throw new BadRequestException('You can only delete your own lists')
+      throw new BadRequestException('You can only delete your own lists');
     }
   }
 
-  async cretePlan(data) {
-    const { listId, content, orderNumber } = data
-    try {
-      const createdList = await this.insertOne('plans', { listId, content, orderNumber });
-      return this.findOne('plans', { _id: createdList.insertedId })
-    } catch (error) {
-      return 'Some error occured while creating plan'
-    }
+  async cretePlan(payload) {
+    const { token, data } = payload;
+    const { listId, content, orderNumber } = data;
+    const userId = this.getUserIdFromToken(token);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const list = await this.findOne('lists', { _id: new ObjectId(listId) }) as any;
+    console.log("===========================")
+    console.log(listId)
+    console.log(list)
+    console.log("===========================")
+    if (list && list.userId === userId) {
+      try {
+        const createdList = await this.insertOne('plans', { listId, content, orderNumber });
+        return this.findOne('plans', { _id: createdList.insertedId })
+      } catch (error) {
+        return 'Some error occured while creating plan'
+      }
+    } else {
+      throw new BadRequestException('You can only add plans to your own lists');
+    };
   }
 }

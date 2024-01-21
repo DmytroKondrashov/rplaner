@@ -27,9 +27,12 @@ export class PlansController {
   @Public()
   @HttpCode(HttpStatus.OK)
   @Post('new')
-  async createPlan(@Body() newPlanDto): Promise<string> {
+  async createPlan(
+    @Body() data,
+    @Token() token: string,
+    ): Promise<string> {
     try {
-      return this.plansClient.send<string>({cmd: 'cretePlan'}, newPlanDto).toPromise();
+      return this.plansClient.send<string>({cmd: 'cretePlan'}, { token, data }).toPromise();
     } catch (error) {
       console.error('Error in /plans/new request:', error.message);
     }
