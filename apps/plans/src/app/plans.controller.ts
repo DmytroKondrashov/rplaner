@@ -27,4 +27,9 @@ export class PlansController {
   editList(data: string) {
     return this.plansService.editList(data);
   }
+
+  @MessagePattern({ cmd: 'deleteList' })
+  deleteList(data: string) {
+    return this.plansService.deleteList(data);
+  }
 }

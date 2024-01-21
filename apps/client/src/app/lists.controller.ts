@@ -1,4 +1,4 @@
-import { Post, Controller, Get, Inject, Body, Query } from '@nestjs/common';
+import { Post, Controller, Get, Inject, Body, Query, Delete, Param } from '@nestjs/common';
 
 import { ClientProxy } from '@nestjs/microservices';
 import { Token } from './decorators/token.decorator';
@@ -60,6 +60,18 @@ export class ListsController {
       return this.plansClient.send<string>({cmd: 'editList'}, { id, listName, token }).toPromise();
     } catch (error) {
       console.error('Error in /lists/new request:', error.message);
+    }
+  }
+
+  @Delete(':id')
+  deleteUser(
+    @Param('id') id: string,
+    @Token() token: string,
+    ) {
+    try {
+      return this.plansClient.send<string>({cmd: 'deleteList'}, { id, token }).toPromise();
+    } catch (error) {
+      console.error('Error in /plans/delete request:', error.message);
     }
   }
 }

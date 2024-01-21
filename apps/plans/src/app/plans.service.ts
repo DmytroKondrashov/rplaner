@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Collection, Db, InsertOneResult, MongoClient, ObjectId, OptionalId, WithId } from 'mongodb';
+import { Collection, Db, DeleteResult, InsertOneResult, MongoClient, ObjectId, OptionalId, WithId } from 'mongodb';
 
 @Injectable()
 export class PlansService {
@@ -64,9 +64,12 @@ export class PlansService {
     );
   }
 
+  deleteOne(collection: string, query): Promise<DeleteResult> {
+    return this.collection(collection).deleteOne(query);
+  }
+
   async createList(data) {
     const { listName, token } = data;
-    console.log(listName)
     const userId = this.getUserIdFromToken(token);
     const existingList = await this.findOne('lists', { name: listName });
     if (existingList) {
@@ -86,7 +89,7 @@ export class PlansService {
     const { id, listName, token } = data;
     const userId = this.getUserIdFromToken(token);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const existingList = this.findOne('lists', { _id: new ObjectId(id) }) as any;
+    const existingList = await this.findOne('lists', { _id: new ObjectId(id) }) as any;
     if (userId === existingList.userId) {
       try {
         await this.updateOne('lists', {_id: new ObjectId(id)}, { listName })
@@ -103,5 +106,22 @@ export class PlansService {
     const userId = this.getUserIdFromToken(token);
     const collection = this.collection('lists');
     return collection.find({ userId }).toArray();
+  }
+
+  async deleteList(data) {
+    const { id, token } = data;
+    const userId = this.getUserIdFromToken(token);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const list = await this.findOne('lists', { _id: new ObjectId(id) }) as any;
+    if (userId === list.userId) {
+      try {
+        await this.deleteOne('lists', { _id: new ObjectId(id) });
+        return 'List was successfully deleted'
+      } catch (error) {
+        return 'Some error occured while deleting list'
+      }
+    } else {
+      throw new BadRequestException('You can only delete your own lists')
+    }
   }
 }
