@@ -37,4 +37,9 @@ export class PlansController {
   createPlan(data: string) {
     return this.plansService.cretePlan(data);
   }
+
+  @MessagePattern({ cmd: 'getPlans' })
+  getPlans(data: string) {
+    return this.plansService.getPlans(data);
+  }
 }

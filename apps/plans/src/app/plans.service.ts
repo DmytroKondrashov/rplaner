@@ -35,10 +35,15 @@ export class PlansService {
     return this.database.collection(collectionName);
   }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    findAll(collection: string): any {
-      return this.collection(collection).find().toArray();
-    }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  findAll(collection: string): any {
+    return this.collection(collection).find().toArray();
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  findSeveral(collection: string, query: any): any {
+    return this.collection(collection).find(query).toArray();
+  }
 
   insertOne(
     collection: string,
@@ -131,10 +136,6 @@ export class PlansService {
     const userId = this.getUserIdFromToken(token);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const list = await this.findOne('lists', { _id: new ObjectId(listId) }) as any;
-    console.log("===========================")
-    console.log(listId)
-    console.log(list)
-    console.log("===========================")
     if (list && list.userId === userId) {
       try {
         const createdList = await this.insertOne('plans', { listId, content, orderNumber });
@@ -145,5 +146,9 @@ export class PlansService {
     } else {
       throw new BadRequestException('You can only add plans to your own lists');
     };
+  }
+
+  async getPlans(data) {
+    return this.findSeveral('plans', data.listId);
   }
 }

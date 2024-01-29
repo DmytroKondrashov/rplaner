@@ -16,9 +16,12 @@ export class PlansController {
   ) {}
 
   @Get('index')
-  async getPlans(@Query() query): Promise<string> {
+  async getPlans(
+    @Query() listId: string,
+    @Token() token: string,
+    ): Promise<string> {
     try {
-      return this.plansClient.send<string>({cmd: 'getPlans'}, {query}).toPromise();
+      return this.plansClient.send<string>({cmd: 'getPlans'}, { token, listId }).toPromise();
     } catch (error) {
       console.error('Error in /plans/index request:', error.message);
     }
